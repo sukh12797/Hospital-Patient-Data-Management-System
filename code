@@ -1,0 +1,154 @@
+-- 1. Patient Information
+CREATE TABLE Patients (
+    PatientID INT PRIMARY KEY AUTO_INCREMENT,
+    FirstName VARCHAR(50),
+    LastName VARCHAR(50),
+    DateOfBirth DATE,
+    Gender ENUM('Male', 'Female', 'Other'),
+    PhoneNumber VARCHAR(15),
+    Address TEXT,
+    Email VARCHAR(100)
+);
+
+-- 2. Doctor Information
+CREATE TABLE Doctors (
+    DoctorID INT PRIMARY KEY AUTO_INCREMENT,
+    FirstName VARCHAR(50),
+    LastName VARCHAR(50),
+    Specialization VARCHAR(100),
+    PhoneNumber VARCHAR(15),
+    Email VARCHAR(100)
+);
+
+-- 3. Appointment Details
+CREATE TABLE Appointments (
+    AppointmentID INT PRIMARY KEY AUTO_INCREMENT,
+    AppointmentDateTime DATETIME,
+    PatientID INT,
+    DoctorID INT,
+    Reason TEXT,
+    Status ENUM('Scheduled', 'Completed', 'Cancelled'),
+    FOREIGN KEY (PatientID) REFERENCES Patients(PatientID),
+    FOREIGN KEY (DoctorID) REFERENCES Doctors(DoctorID)
+);
+
+-- 4. Medical Records
+CREATE TABLE MedicalRecords (
+    RecordID INT PRIMARY KEY AUTO_INCREMENT,
+    Diagnosis TEXT,
+    Treatment TEXT,
+    DateOfEntry DATE,
+    PatientID INT,
+    FOREIGN KEY (PatientID) REFERENCES Patients(PatientID)
+);
+
+-- 5. Prescription Information
+CREATE TABLE Prescriptions (
+    PrescriptionID INT PRIMARY KEY AUTO_INCREMENT,
+    MedicineName VARCHAR(100),
+    DosageInstructions TEXT,
+    DateOfPrescription DATE,
+    PatientID INT,
+    DoctorID INT,
+    FOREIGN KEY (PatientID) REFERENCES Patients(PatientID),
+    FOREIGN KEY (DoctorID) REFERENCES Doctors(DoctorID)
+);
+
+-- 6. Billing Information
+CREATE TABLE Billing (
+    BillID INT PRIMARY KEY AUTO_INCREMENT,
+    PatientID INT,
+    Amount DECIMAL(10, 2),
+    PaymentDate DATE,
+    PaymentMethod ENUM('Cash', 'Credit Card', 'Insurance'),
+    BillingStatus ENUM('Paid', 'Pending', 'Overdue'),
+    FOREIGN KEY (PatientID) REFERENCES Patients(PatientID)
+);
+
+-- 7. User Authentication Inputs
+CREATE TABLE Users (
+    UserID INT PRIMARY KEY AUTO_INCREMENT,
+    Username VARCHAR(50) UNIQUE,
+    PasswordHash VARCHAR(255),
+    Role ENUM('Doctor', 'Nurse', 'Admin')
+);
+
+-- INSERT
+INSERT INTO Patients (FirstName, LastName, DateOfBirth, Gender, PhoneNumber, Address, Email)
+VALUES ('John', 'Doe', '1980-04-15', 'Male', '1234567890', '123 Main St', 'john@example.com');
+
+-- SELECT
+SELECT * FROM Patients;
+
+-- UPDATE
+UPDATE Patients
+SET PhoneNumber = '9876543210'
+WHERE PatientID = 1;
+
+-- DELETE
+DELETE FROM Patients
+WHERE PatientID = 1;
+
+-- INSERT
+INSERT INTO Doctors (FirstName, LastName, Specialization, PhoneNumber, Email)
+VALUES ('Alice', 'Smith', 'Cardiology', '9876543210', 'alice@hospital.com');
+
+-- SELECT
+SELECT * FROM Doctors;
+
+-- UPDATE
+UPDATE Doctors
+SET Specialization = 'Neurology'
+WHERE DoctorID = 1;
+
+-- DELETE
+DELETE FROM Doctors
+WHERE DoctorID = 1;
+
+-- INSERT
+INSERT INTO Appointments (AppointmentDateTime, PatientID, DoctorID, Reason, Status)
+VALUES ('2025-04-20 10:00:00', 1, 1, 'Regular Checkup', 'Scheduled');
+
+-- SELECT
+SELECT * FROM Appointments;
+
+-- UPDATE
+UPDATE Appointments
+SET Status = 'Completed'
+WHERE AppointmentID = 1;
+
+-- DELETE
+DELETE FROM Appointments
+WHERE AppointmentID = 1;
+
+-- INSERT
+INSERT INTO MedicalRecords (Diagnosis, Treatment, DateOfEntry, PatientID)
+VALUES ('Flu', 'Rest and hydration', '2025-04-17', 1);
+
+-- SELECT
+SELECT * FROM MedicalRecords;
+
+-- UPDATE
+UPDATE MedicalRecords
+SET Treatment = 'Flu medication + rest'
+WHERE RecordID = 1;
+
+-- DELETE
+DELETE FROM MedicalRecords
+WHERE RecordID = 1;
+
+-- INSERT
+INSERT INTO Prescriptions (MedicineName, DosageInstructions, DateOfPrescription, PatientID, DoctorID)
+VALUES ('Paracetamol', '1 tablet after meals', '2025-04-17', 1, 1);
+
+-- SELECT
+SELECT * FROM Prescriptions;
+
+-- UPDATE
+UPDATE Prescriptions
+SET DosageInstructions = '2 tablets per day after food'
+WHERE PrescriptionID = 1;
+
+-- DELETE
+DELETE FROM Prescriptions
+WHERE PrescriptionID = 1;
